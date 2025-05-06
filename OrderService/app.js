@@ -1,11 +1,11 @@
+// OrderService/app.js
 const express = require("express");
+const bodyParser = require("body-parser");
+const orderRoutes = require("./routes/orderRoutes"); // Menghubungkan route
+
 const app = express();
-const orderRoutes = require("./routes/orderRoutes");
-
-app.use(express.json()); // Middleware untuk parsing JSON
-
-// Route untuk OrderService
-app.use("/orders", orderRoutes);
+app.use(bodyParser.json()); // Middleware untuk parsing JSON
+app.use("/orders", orderRoutes); // Semua route terkait /orders
 
 app.listen(3005, () => {
   console.log("OrderService is running on http://localhost:3005");

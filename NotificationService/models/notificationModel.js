@@ -1,26 +1,28 @@
-const db = require("../config/db");
+// NotificationService/models/notificationModel.js
+const db = require("../config/db"); // Koneksi ke database
 
-// Fungsi untuk mendapatkan notifikasi berdasarkan ID
+// Mendapatkan data notifikasi berdasarkan notification_id
 const getNotificationById = (notificationId, callback) => {
-  const query = `SELECT * FROM notifications WHERE notification_id = ?`;
+  const query = "SELECT * FROM notifications WHERE notification_id = ?";
   db.query(query, [notificationId], (err, results) => {
     if (err) {
-      console.error("Error retrieving notification:", err);
-      return callback(err, null);
+      callback(err, null);
+    } else {
+      callback(null, results[0]); // Mengembalikan data notifikasi
     }
-    callback(null, results[0]);
   });
 };
 
-// Fungsi untuk menambahkan notifikasi baru
+// Menambahkan notifikasi baru ke dalam database
 const addNotification = (userId, complaintId, message, status, callback) => {
-  const query = `INSERT INTO notifications (user_id, complaint_id, message, status) VALUES (?, ?, ?, ?)`;
+  const query =
+    "INSERT INTO notifications (user_id, complaint_id, message, status) VALUES (?, ?, ?, ?)";
   db.query(query, [userId, complaintId, message, status], (err, results) => {
     if (err) {
-      console.error("Error inserting notification:", err);
-      return callback(err, null);
+      callback(err, null);
+    } else {
+      callback(null, results); // Mengembalikan hasil query insert
     }
-    callback(null, results);
   });
 };
 

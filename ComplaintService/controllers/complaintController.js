@@ -1,6 +1,8 @@
-const complaintModel = require("../models/complaintModel");
+// ComplaintService/controllers/complaintController.js
+const complaintModel = require("../models/complaintModel"); // Mengimpor model
+const fetch = require("node-fetch"); // Mengimpor fetch untuk konsumsi data produk
 
-// Fungsi untuk mendapatkan keluhan berdasarkan ID
+// Menyediakan data keluhan berdasarkan complaint_id (Provider)
 const getComplaintById = (req, res) => {
   const complaintId = req.params.id;
   complaintModel.getComplaintById(complaintId, (err, complaint) => {
@@ -12,11 +14,11 @@ const getComplaintById = (req, res) => {
     if (!complaint) {
       return res.status(404).json({ message: "Complaint not found" });
     }
-    res.status(200).json(complaint);
+    res.status(200).json(complaint); // Menyajikan data keluhan
   });
 };
 
-// Fungsi untuk menambahkan keluhan baru
+// Menambahkan keluhan baru (Provider)
 const addComplaint = (req, res) => {
   const { userId, productId, complaintText, status } = req.body;
   complaintModel.addComplaint(
@@ -40,36 +42,14 @@ const addComplaint = (req, res) => {
   );
 };
 
-// Fungsi untuk memperbarui status keluhan
-const updateComplaint = (req, res) => {
-  const { status } = req.body;
-  const complaintId = req.params.id;
-  complaintModel.updateComplaint(complaintId, status, (err, results) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Error updating complaint", error: err });
-    }
-    res.status(200).json({ message: "Complaint updated successfully" });
-  });
+// Mengonsumsi data produk dari ProductService (Consumer)
+const fetchProductData = (productId) => {
+  fetch(`http://localhost:3002/products/${productId}`) // Request ke ProductService
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Fasilitas yang Dikeluhkan:", data);
+    })
+    .catch((error) => console.error("Error:", error));
 };
 
-// Fungsi untuk menghapus keluhan
-const deleteComplaint = (req, res) => {
-  const complaintId = req.params.id;
-  complaintModel.deleteComplaint(complaintId, (err, results) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Error deleting complaint", error: err });
-    }
-    res.status(200).json({ message: "Complaint deleted successfully" });
-  });
-};
-
-module.exports = {
-  getComplaintById,
-  addComplaint,
-  updateComplaint,
-  deleteComplaint,
-};
+module.exports = { getComplaintById, addComplaint, fetchProductData };

@@ -1,11 +1,10 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+const complaintRoutes = require("./routes/complaintRoutes"); // Menghubungkan route
+
 const app = express();
-const complaintRoutes = require("./routes/complaintRoutes");
-
-app.use(express.json()); // Middleware untuk parsing JSON
-
-// Route untuk ComplaintService
-app.use("/complaints", complaintRoutes);
+app.use(bodyParser.json()); // Middleware untuk parsing JSON
+app.use("/complaints", complaintRoutes); // Semua route terkait /complaints
 
 app.listen(3003, () => {
   console.log("ComplaintService is running on http://localhost:3003");

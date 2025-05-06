@@ -1,6 +1,8 @@
-const productModel = require("../models/productModel");
+// ProductService/controllers/productController.js
+const productModel = require("../models/productModel"); // Mengimpor model
+const fetch = require("node-fetch"); // Mengimpor fetch untuk konsumsi data keluhan
 
-// Fungsi untuk mendapatkan produk berdasarkan ID
+// Menyediakan data produk berdasarkan product_id (Provider)
 const getProductById = (req, res) => {
   const productId = req.params.id;
   productModel.getProductById(productId, (err, product) => {
@@ -12,11 +14,11 @@ const getProductById = (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.status(200).json(product);
+    res.status(200).json(product); // Menyajikan data produk
   });
 };
 
-// Fungsi untuk menambahkan produk baru
+// Menambahkan produk baru (Provider)
 const addProduct = (req, res) => {
   const { name, type, location, status, description } = req.body;
   productModel.addProduct(
@@ -41,39 +43,14 @@ const addProduct = (req, res) => {
   );
 };
 
-// Fungsi untuk memperbarui produk
-const updateProduct = (req, res) => {
-  const { name, type, location, status, description } = req.body;
-  const productId = req.params.id;
-  productModel.updateProduct(
-    productId,
-    name,
-    type,
-    location,
-    status,
-    description,
-    (err, results) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ message: "Error updating product", error: err });
-      }
-      res.status(200).json({ message: "Product updated successfully" });
-    }
-  );
+// Mengonsumsi data keluhan dari ComplaintService (Consumer)
+const fetchComplaintData = (productId) => {
+  fetch(`http://localhost:3003/complaints/product/${productId}`) // Request ke ComplaintService
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Keluhan Fasilitas:", data);
+    })
+    .catch((error) => console.error("Error:", error));
 };
 
-// Fungsi untuk menghapus produk
-const deleteProduct = (req, res) => {
-  const productId = req.params.id;
-  productModel.deleteProduct(productId, (err, results) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Error deleting product", error: err });
-    }
-    res.status(200).json({ message: "Product deleted successfully" });
-  });
-};
-
-module.exports = { getProductById, addProduct, updateProduct, deleteProduct };
+module.exports = { getProductById, addProduct, fetchComplaintData };

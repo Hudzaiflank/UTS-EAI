@@ -1,11 +1,12 @@
+// OrderService/routes/orderRoutes.js
 const express = require("express");
 const router = express.Router();
 const orderController = require("../controllers/orderController");
 
-// Endpoint untuk mendapatkan order berdasarkan ID
+// Route untuk mendapatkan data permintaan berdasarkan order_id
 router.get("/:id", orderController.getOrderById);
 
-// Endpoint untuk menambahkan order baru
+// Route untuk menambahkan permintaan baru
 router.post("/", orderController.addOrder);
 
 module.exports = router;

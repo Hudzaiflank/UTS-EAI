@@ -1,17 +1,12 @@
+// ComplaintService/routes/complaintRoutes.js
 const express = require("express");
 const router = express.Router();
 const complaintController = require("../controllers/complaintController");
 
-// Endpoint untuk mendapatkan keluhan berdasarkan ID
+// Route untuk mendapatkan data keluhan berdasarkan complaint_id
 router.get("/:id", complaintController.getComplaintById);
 
-// Endpoint untuk menambahkan keluhan baru
+// Route untuk menambahkan keluhan baru
 router.post("/", complaintController.addComplaint);
-
-// Endpoint untuk memperbarui status keluhan berdasarkan ID
-router.put("/:id", complaintController.updateComplaint);
-
-// Endpoint untuk menghapus keluhan berdasarkan ID
-router.delete("/:id", complaintController.deleteComplaint);
 
 module.exports = router;

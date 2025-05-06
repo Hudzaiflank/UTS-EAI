@@ -1,67 +1,33 @@
-const db = require("../config/db");
+// ProductService/models/productModel.js
+const db = require("../config/db"); // Koneksi ke database
 
-// Fungsi untuk mendapatkan data produk berdasarkan ID
+// Mendapatkan data produk berdasarkan product_id
 const getProductById = (productId, callback) => {
-  const query = `SELECT * FROM products WHERE product_id = ?`;
+  const query = "SELECT * FROM products WHERE product_id = ?";
   db.query(query, [productId], (err, results) => {
     if (err) {
-      console.error("Error retrieving product:", err);
-      return callback(err, null);
+      callback(err, null);
+    } else {
+      callback(null, results[0]); // Mengembalikan data produk
     }
-    callback(null, results[0]);
   });
 };
 
-// Fungsi untuk menambahkan produk baru
+// Menambahkan produk baru ke dalam database
 const addProduct = (name, type, location, status, description, callback) => {
-  const query = `INSERT INTO products (name, type, location, status, description) VALUES (?, ?, ?, ?, ?)`;
+  const query =
+    "INSERT INTO products (name, type, location, status, description) VALUES (?, ?, ?, ?, ?)";
   db.query(
     query,
     [name, type, location, status, description],
     (err, results) => {
       if (err) {
-        console.error("Error inserting product:", err);
-        return callback(err, null);
+        callback(err, null);
+      } else {
+        callback(null, results); // Mengembalikan hasil query insert
       }
-      callback(null, results);
     }
   );
 };
 
-// Fungsi untuk memperbarui produk
-const updateProduct = (
-  productId,
-  name,
-  type,
-  location,
-  status,
-  description,
-  callback
-) => {
-  const query = `UPDATE products SET name = ?, type = ?, location = ?, status = ?, description = ? WHERE product_id = ?`;
-  db.query(
-    query,
-    [name, type, location, status, description, productId],
-    (err, results) => {
-      if (err) {
-        console.error("Error updating product:", err);
-        return callback(err, null);
-      }
-      callback(null, results);
-    }
-  );
-};
-
-// Fungsi untuk menghapus produk
-const deleteProduct = (productId, callback) => {
-  const query = `DELETE FROM products WHERE product_id = ?`;
-  db.query(query, [productId], (err, results) => {
-    if (err) {
-      console.error("Error deleting product:", err);
-      return callback(err, null);
-    }
-    callback(null, results);
-  });
-};
-
-module.exports = { getProductById, addProduct, updateProduct, deleteProduct };
+module.exports = { getProductById, addProduct };

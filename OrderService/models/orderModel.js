@@ -1,26 +1,28 @@
-const db = require("../config/db");
+// OrderService/models/orderModel.js
+const db = require("../config/db"); // Koneksi ke database
 
-// Fungsi untuk mendapatkan data order berdasarkan ID
+// Mendapatkan data permintaan berdasarkan order_id
 const getOrderById = (orderId, callback) => {
-  const query = `SELECT * FROM orders WHERE order_id = ?`;
+  const query = "SELECT * FROM orders WHERE order_id = ?";
   db.query(query, [orderId], (err, results) => {
     if (err) {
-      console.error("Error retrieving order:", err);
-      return callback(err, null);
+      callback(err, null);
+    } else {
+      callback(null, results[0]); // Mengembalikan data permintaan
     }
-    callback(null, results[0]);
   });
 };
 
-// Fungsi untuk menambahkan order baru
+// Menambahkan permintaan baru ke dalam database
 const addOrder = (userId, productId, requestType, status, callback) => {
-  const query = `INSERT INTO orders (user_id, product_id, request_type, status) VALUES (?, ?, ?, ?)`;
+  const query =
+    "INSERT INTO orders (user_id, product_id, request_type, status) VALUES (?, ?, ?, ?)";
   db.query(query, [userId, productId, requestType, status], (err, results) => {
     if (err) {
-      console.error("Error inserting order:", err);
-      return callback(err, null);
+      callback(err, null);
+    } else {
+      callback(null, results); // Mengembalikan hasil query insert
     }
-    callback(null, results);
   });
 };
 
